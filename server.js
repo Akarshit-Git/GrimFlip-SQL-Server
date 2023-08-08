@@ -7,9 +7,9 @@ const bodyparser = require('body-parser');
 app.use(bodyparser.json());
 
 const connection = mysql.createConnection({
-    host: 'localhost', // host for connection
+    host: '127.0.0.1', // host for connection
     port: 3306, // default port for mysql is 3306
-    database: 'testDB', // database from which we want to connect out node application
+    database: 'GrimFlip', // database from which we want to connect out node application
     user: 'root', // username of the mysql connection
     password: 'root1234' // password of the mysql connection
 });
@@ -27,8 +27,8 @@ connection.connect(function (err) {
 app.listen(3000, () => console.log('Server running at 3000 port'));
 
 //GET all rows
-app.get('/test', (req, res) => {
-    connection.query('SELECT * FROM test1', (err, rows, fields) => {
+app.get('/scores', (req, res) => {
+    connection.query('SELECT * FROM Scores', (err, rows, fields) => {
         if (!err)
             res.send(rows);
         else
@@ -36,19 +36,9 @@ app.get('/test', (req, res) => {
     });
 });
 
-//GET specific row
-app.get('/test/:id', (req, res) => {
-    connection.query('SELECT * FROM test1 WHERE id = ?', [req.params.id], (err, rows, fields) => {
-        if (!err)
-            res.send(rows);
-        else
-            {console.log(err);}
-    });
-});
-
-//Delete specific row
-app.get('/test/:id', (req, res) => {
-    connection.query('DELETE FROM test1 WHERE id = ?', [req.params.id], (err, rows, fields) => {
+//Update specific row
+app.post('/updateScores', (req, res) => {
+    connection.query('UPDATE Scores SET Best = ? WHERE Player_ID = ?', [req.body.Best, req.body.Player_ID], (err, rows, fields) => {
         if (!err)
             res.send('Deleted');
         else
